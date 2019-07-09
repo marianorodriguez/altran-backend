@@ -7,7 +7,7 @@
     "dev": "babel-node bin/index.js",
     "start": "pm2 startOrGracefulReload pm2.production.json",
     "stop": "pm2 kill",
-    "test": "BABEL_ENV=test mocha test/**/*.spec.js --require babel-register --reporter spec --no-timeouts"
+    "test": "BABEL_ENV=test mocha test/**/*.spec.js test/*.spec.js --require babel-register --reporter spec --no-timeouts"
   },
   "repository": {
     "type": "git",
