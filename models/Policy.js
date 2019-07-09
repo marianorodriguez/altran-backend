@@ -1,6 +1,7 @@
 import dba from '../lib/dba';
 import Client from './Client';
 
+const cacheTimeInSeconds = 60 * 5; // 5 mins of redis cache
 export default class Policy {
   constructor(id) {
     this.id = id;
@@ -9,6 +10,7 @@ export default class Policy {
   async getLinkedUser() {
     return new Promise(resolve => dba.cachePromiseQuery(
       null,
+      cacheTimeInSeconds,
       `SELECT p.clientId
         FROM policies p
         WHERE p.id = ?`,
@@ -25,6 +27,7 @@ export default class Policy {
   static async getAllByUserName(name) {
     return new Promise(resolve => dba.cachePromiseQuery(
       null,
+      cacheTimeInSeconds,
       `SELECT p.id, p.amountInsured, p.email, p.inceptionDate, p.installmentPayment, p.clientId
         FROM policies p, clients c
         WHERE c.id = p.clientId 
