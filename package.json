@@ -4,10 +4,10 @@
   "description": "Backend exercise made for Altran",
   "main": "index.js",
   "scripts": {
-    "dev": "babel-node bin/index.js",
+    "dev": "NODE_ENV=development babel-node bin/index.js",
     "start": "pm2 startOrGracefulReload pm2.production.json",
     "stop": "pm2 kill",
-    "test": "BABEL_ENV=test mocha test/**/*.spec.js test/*.spec.js --require babel-register --exit"
+    "test": "NODE_ENV=test mocha test/**/*.spec.js test/*.spec.js --require babel-register --exit"
   },
   "repository": {
     "type": "git",
