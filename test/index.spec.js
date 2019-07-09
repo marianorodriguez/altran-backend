@@ -3,14 +3,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 
-const mock = require('mock-require');
-
-mock('../lib/dba.js', {
-  cachePromiseQuery: async () => [],
-  promiseQuery: async () => [],
-});
-
-
 const serverInitialize = require('../bin/server').default;
 
 process.env.BABEL_ENV = 'test';
