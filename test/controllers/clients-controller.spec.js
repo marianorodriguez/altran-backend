@@ -19,8 +19,8 @@ use(chaiHttp);
 
 describe('CLIENTS CONTROLLER', () => {
   let server = null;
-  beforeEach(async () => {
-    server = await serverInitialize();
+  beforeEach(() => {
+    server = serverInitialize();
   });
 
   it('should reply with a client when passed a clientId',

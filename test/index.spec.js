@@ -9,8 +9,8 @@ process.env.BABEL_ENV = 'test';
 chai.use(chaiHttp);
 
 describe('SERVER', () => {
-  it('should reply to PING', async () => {
-    const server = await serverInitialize();
+  it('should reply to PING', () => {
+    const server = serverInitialize();
     return new Promise((resolve) => {
       chai
         .request(server)

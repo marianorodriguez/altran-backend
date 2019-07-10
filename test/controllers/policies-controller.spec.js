@@ -27,8 +27,8 @@ use(chaiHttp);
 
 describe('POLICIES CONTROLLER', () => {
   let server = null;
-  beforeEach(async () => {
-    server = await serverInitialize();
+  beforeEach(() => {
+    server = serverInitialize();
   });
 
   it('should reply with a policy list when passed a user name',
