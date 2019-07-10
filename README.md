@@ -7,7 +7,7 @@ Having a MySQL server and client installed on the machine (https://www.mysql.com
 
 Once you have installed the client and serve run the following command, replacing *\<USER\>* with the username of your MySQL client:
   
-`mysql -u<USER> -p altran < /PATH/TO/PROJECT/ROOT/altrandb.sql`
+`mysql -u<USER> -p < /PATH/TO/PROJECT/ROOT/altrandb.sql`
 
 This command will create and load the required database and tables.
 
