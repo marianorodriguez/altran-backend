@@ -1,19 +1,17 @@
 
 import express from 'express';
 import routes from '../controllers';
+import allowOrigin from '../controllers/middleware/allow-origin';
+import bodyParser from '../controllers/middleware/body-parser';
 
 const app = express();
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 if (isDevelopment) {
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-  });
+  app.use(allowOrigin);
 }
 
+app.use(bodyParser);
 app.use(routes);
 
 function listen() {
