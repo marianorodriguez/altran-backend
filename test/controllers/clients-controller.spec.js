@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 
 import {
-  assert, request, use,
+  assert, request, use, expect,
 } from 'chai';
 import chaiHttp from 'chai-http';
 
@@ -19,14 +19,24 @@ use(chaiHttp);
 
 describe('CLIENTS CONTROLLER', () => {
   let server = null;
-  beforeEach(() => {
-    server = serverInitialize();
+  let token = null;
+  beforeEach(async () => {
+    token = await new Promise((resolve) => {
+      server = serverInitialize();
+      request(server)
+        .post('/login')
+        .send({ email: mockClient.email })
+        .end((err, res) => {
+          resolve(res.body.token);
+        });
+    });
   });
 
   it('should reply with a client when passed a clientId',
     async () => new Promise((resolve) => {
       request(server)
         .get(`/clients/byId/${mockClient.id}`)
+        .set('token', token)
         .end((err, res) => {
           assert.equal(res.body.found, true);
           assert.deepEqual(res.body.client, mockClient);
@@ -39,6 +49,7 @@ describe('CLIENTS CONTROLLER', () => {
     async () => new Promise((resolve) => {
       request(server)
         .get('/clients/byId/invalid_id')
+        .set('token', token)
         .end((err, res) => {
           assert.equal(res.body.found, false);
           assert.deepEqual(res.body.client, {});
@@ -51,6 +62,7 @@ describe('CLIENTS CONTROLLER', () => {
     async () => new Promise((resolve) => {
       request(server)
         .get(`/clients/byName/${mockClient.name}`)
+        .set('token', token)
         .end((err, res) => {
           assert.equal(res.body.found, true);
           assert(res.body.clients.length > 0);
@@ -65,9 +77,21 @@ describe('CLIENTS CONTROLLER', () => {
     async () => new Promise((resolve) => {
       request(server)
         .get('/clients/byName/invalid_name')
+        .set('token', token)
         .end((err, res) => {
           assert.equal(res.body.found, false);
           assert(res.body.clients.length === 0);
+          resolve();
+        });
+    }));
+
+  it('should return unauthorized if a token is not present in this header',
+    async () => new Promise((resolve) => {
+      request(server)
+        .get(`/clients/byName/${mockClient.name}`)
+        .end((err, res) => {
+          assert.equal(res.status, 401);
+          expect(res.body.error).to.be.an('object');
           resolve();
         });
     }));

@@ -27,4 +27,14 @@ export default {
     );
     return res.json({ success: true, token });
   },
+
+  isLogged: (req, res, next) => {
+    const { token } = req.headers;
+    try {
+      JWT.verify(token, 'secretKey');
+      return next();
+    } catch (e) {
+      return res.status(401).json({ error: e });
+    }
+  },
 };

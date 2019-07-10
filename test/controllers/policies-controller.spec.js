@@ -27,14 +27,24 @@ use(chaiHttp);
 
 describe('POLICIES CONTROLLER', () => {
   let server = null;
-  beforeEach(() => {
-    server = serverInitialize();
+  let token = null;
+  beforeEach(async () => {
+    token = await new Promise((resolve) => {
+      server = serverInitialize();
+      request(server)
+        .post('/login')
+        .send({ email: mockClient.email })
+        .end((err, res) => {
+          resolve(res.body.token);
+        });
+    });
   });
 
   it('should reply with a policy list when passed a user name',
     async () => new Promise((resolve) => {
       request(server)
         .get(`/policies/byUsername/${mockClient.name}`)
+        .set('token', token)
         .end((err, res) => {
           assert.equal(res.body.found, true);
           expect(res.body.policies).to.be.an('array');
@@ -51,6 +61,7 @@ describe('POLICIES CONTROLLER', () => {
     async () => new Promise((resolve) => {
       request(server)
         .get('/policies/byUsername/invalid_name')
+        .set('token', token)
         .end((err, res) => {
           assert.equal(res.body.found, false);
           expect(res.body.policies).to.be.an('array');
@@ -63,6 +74,7 @@ describe('POLICIES CONTROLLER', () => {
     async () => new Promise((resolve) => {
       request(server)
         .get(`/policies/user/${mockPolicy.id}`)
+        .set('token', token)
         .end((err, res) => {
           assert.equal(res.body.found, true);
           expect(res.body.client).to.be.an('object');
@@ -75,10 +87,22 @@ describe('POLICIES CONTROLLER', () => {
     async () => new Promise((resolve) => {
       request(server)
         .get('/policies/user/invalid_policy_id')
+        .set('token', token)
         .end((err, res) => {
           assert.equal(res.body.found, false);
           expect(res.body.client).to.be.an('object');
           assert.deepEqual(res.body.client, {});
+          resolve();
+        });
+    }));
+
+  it('should return unauthorized if a token is not present in this header',
+    async () => new Promise((resolve) => {
+      request(server)
+        .get(`/policies/user/${mockPolicy.id}`)
+        .end((err, res) => {
+          assert.equal(res.status, 401);
+          expect(res.body.error).to.be.an('object');
           resolve();
         });
     }));
