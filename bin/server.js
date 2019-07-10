@@ -17,7 +17,9 @@ app.use(routes);
 function listen() {
   const port = process.env.PORT || 8080;
   const server = app.listen(port, () => {
-    console.log(`Ready! Listening on port ${port}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Ready! Listening on port ${port}`);
+    }
   });
   process.on('SIGINT', () => {
     server.close(() => {
