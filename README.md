@@ -24,6 +24,8 @@ Finally, you may have to edit the connection params in *lib/DB_CONFIG.json* conf
 
 **Available commands:**
 
+`npm i`: Installs the required dependencies for the server to start
+
 `npm run dev`: Launches the server in development mode
 
 `npm run start`: Launches the server in production mode
