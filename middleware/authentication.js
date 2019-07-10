@@ -1,5 +1,5 @@
 import JWT from 'jsonwebtoken';
-import Client from '../../models/Client';
+import Client from '../models/Client';
 
 export default {
   login: async (req, res) => {

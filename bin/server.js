@@ -1,8 +1,8 @@
 
 import express from 'express';
 import routes from '../controllers';
-import allowOrigin from '../controllers/middleware/allow-origin';
-import bodyParser from '../controllers/middleware/body-parser';
+import allowOrigin from '../middleware/allow-origin';
+import bodyParser from '../middleware/body-parser';
 
 const app = express();
 const isDevelopment = process.env.NODE_ENV !== 'production';

@@ -2,7 +2,7 @@ import express from 'express';
 
 import clientRoutes from './clients/clients.router';
 import policiesRoutes from './policies/policies.router';
-import auth from './middleware/authentication';
+import auth from './../middleware/authentication';
 
 const router = express.Router();
 

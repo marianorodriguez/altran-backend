@@ -1,7 +1,7 @@
 import express from 'express';
 import controller from './policies.controller';
-import authorization from '../middleware/authorization';
-import authentication from '../middleware/authentication';
+import authorization from '../../middleware/authorization';
+import authentication from '../../middleware/authentication';
 
 const router = express.Router();
 
