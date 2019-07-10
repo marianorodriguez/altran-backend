@@ -1,7 +1,7 @@
 import express from 'express';
 
-import clientRoutes from './clients';
-import policiesRoutes from './policies';
+import clientRoutes from './clients/clients.router';
+import policiesRoutes from './policies/policies.router';
 
 const router = express.Router();
 

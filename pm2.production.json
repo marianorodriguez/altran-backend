@@ -1,6 +1,6 @@
 {
   "apps" : [{
-    "name": "UTA-worker",
+    "name": "pm2-altran-worker",
     "script": "bin/index.js",
     "out": "/dev/null",
     "instances" : 4,
