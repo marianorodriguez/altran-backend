@@ -27,9 +27,9 @@ use(chaiHttp);
 
 describe('POLICIES CONTROLLER', () => {
   let server = null;
-  let token = null;
+  let adminToken = null;
   beforeEach(async () => {
-    token = await new Promise((resolve) => {
+    adminToken = await new Promise((resolve) => {
       server = serverInitialize();
       request(server)
         .post('/login')
@@ -44,7 +44,7 @@ describe('POLICIES CONTROLLER', () => {
     async () => new Promise((resolve) => {
       request(server)
         .get(`/policies/byUsername/${mockClient.name}`)
-        .set('token', token)
+        .set('token', adminToken)
         .end((err, res) => {
           assert.equal(res.body.found, true);
           expect(res.body.policies).to.be.an('array');
@@ -61,7 +61,7 @@ describe('POLICIES CONTROLLER', () => {
     async () => new Promise((resolve) => {
       request(server)
         .get('/policies/byUsername/invalid_name')
-        .set('token', token)
+        .set('token', adminToken)
         .end((err, res) => {
           assert.equal(res.body.found, false);
           expect(res.body.policies).to.be.an('array');
@@ -74,7 +74,7 @@ describe('POLICIES CONTROLLER', () => {
     async () => new Promise((resolve) => {
       request(server)
         .get(`/policies/user/${mockPolicy.id}`)
-        .set('token', token)
+        .set('token', adminToken)
         .end((err, res) => {
           assert.equal(res.body.found, true);
           expect(res.body.client).to.be.an('object');
@@ -87,7 +87,7 @@ describe('POLICIES CONTROLLER', () => {
     async () => new Promise((resolve) => {
       request(server)
         .get('/policies/user/invalid_policy_id')
-        .set('token', token)
+        .set('token', adminToken)
         .end((err, res) => {
           assert.equal(res.body.found, false);
           expect(res.body.client).to.be.an('object');
@@ -106,4 +106,28 @@ describe('POLICIES CONTROLLER', () => {
           resolve();
         });
     }));
+
+  it('should return unauthorized if called by a client with no admin role',
+    async () => {
+      const userToken = await new Promise((resolve) => {
+        server = serverInitialize();
+        request(server)
+          .post('/login')
+          .send({ email: 'lorettablankenship@quotezart.com' })
+          .end((err, res) => {
+            resolve(res.body.token);
+          });
+      });
+
+      return new Promise((resolve) => {
+        request(server)
+          .get(`/policies/byUsername/${mockClient.name}`)
+          .set('token', userToken)
+          .end((err, res) => {
+            assert.equal(res.status, 401);
+            expect(res.body.error).to.be.an('object');
+            resolve();
+          });
+      });
+    });
 });

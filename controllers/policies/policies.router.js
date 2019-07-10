@@ -1,10 +1,15 @@
 import express from 'express';
 import controller from './policies.controller';
-import auth from '../middleware/authentication';
+import authorization from '../middleware/authorization';
+import authentication from '../middleware/authentication';
 
 const router = express.Router();
 
-router.use(auth.isLogged);
+router.use(
+  authentication.isLogged,
+  authorization.hasRole('admin'),
+);
+
 router.get('/user/:policyId', controller.getUserById);
 router.get('/byUsername/:name', controller.getAllByName);
 
