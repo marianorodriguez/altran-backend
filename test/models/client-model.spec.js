@@ -39,4 +39,19 @@ describe('CLIENT MODEL', () => {
     const clients = await Client.getAllByName('Jacq');
     assert(clients.length === 0);
   });
+
+  it('should return a valid client when searching by email', async () => {
+    const client = await Client.getByEmail(mockClient.email);
+    assert.deepEqual(client, mockClient);
+  });
+
+  it('should return an empty object when no data is passed', async () => {
+    const c1 = await Client.getAllByName();
+    const c2 = await Client.getByEmail();
+    const c3 = await Client.getById();
+
+    assert.deepEqual(c1, []);
+    assert.deepEqual(c2, {});
+    assert.deepEqual(c3, {});
+  });
 });

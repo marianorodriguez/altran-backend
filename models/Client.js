@@ -11,6 +11,15 @@ export default class Client {
       .catch(() => resolve({})));
   }
 
+  static async getByEmail(email) {
+    return new Promise(resolve => dba.cachePromiseQuery(
+      null,
+      cacheTimeInSeconds,
+      'SELECT id, name, email, role FROM clients WHERE email = ?', [email],
+    ).then(res => resolve((res && res[0]) || {}))
+      .catch(() => resolve({})));
+  }
+
   static async getAllByName(name) {
     return new Promise(resolve => dba.cachePromiseQuery(
       null,

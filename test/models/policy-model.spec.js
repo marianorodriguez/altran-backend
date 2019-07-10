@@ -43,4 +43,12 @@ describe('POLICY MODEL', () => {
     const user = await policy.getLinkedUser();
     assert.deepEqual(user, {});
   });
+  it('should return an empty object when no data is passed', async () => {
+    const p = new Policy();
+    const p1 = await Policy.getAllByUserName();
+    const p2 = await p.getLinkedUser();
+
+    assert.deepEqual(p1, []);
+    assert.deepEqual(p2, {});
+  });
 });
