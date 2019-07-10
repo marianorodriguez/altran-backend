@@ -13,7 +13,15 @@ then, import the dump into said database via any MySQL Client Interface or with 
   
 `mysql -u<USER> -p altran < altrandb.sql`
 
-Finally, you may have to edit the connection params in lib/DB_CONFIG.json configuration file.
+Finally, you may have to edit the connection params in *lib/DB_CONFIG.json* configuration file:
+
+`
+{
+    "host": "localhost",
+    "password": "123456",
+    "user": "root"
+}
+`
 
 
 **Available commands:**
@@ -25,6 +33,55 @@ Finally, you may have to edit the connection params in lib/DB_CONFIG.json config
 `npm run stop`: Stops the server when launched on production mode
 
 `npm run test`: Runs the test suite.
+
+
+**How to use:**
+
+you will need a login token to access to the main endpoints.
+
+- Make a POST request to */login* with the following body:
+`{
+  "email": "<YOUR_EMAIL>"
+ }`
+ 
+ the server will validate your email with the clients database and send you a Token with a 30 minutes life span.
+ 
+ available endpoints:
+ 
+ - GET /clients/byId/:clientId -> sends client data, searched by client ID.
+ - GET /clients/byName/:name -> sends client data, searched by client name.
+ - GET /policies/user/:policyId -> sends the client data linked to a policy, searched by policy ID.
+ - GET /policies/byUsername/:name -> sends all policies linked to a client, searched by client name.
+ 
+ *All request must have a "token" key set in the header with the <AUTH_TOKEN> obtained in the login request as the value.*
+ 
+ */policies endpoints requires the logged user to have the "admin" role.*
+
+
+**Request example:**
+
+- Login request:
+`curl -X POST http://localhost:8080/login -H 'content-type: application/json' -d '{	"email": "sherrieblankenship@quotezart.com" }'`
+
+Login response: `{
+  "success":true,
+  "token":"<AUTH_TOKEN>"
+}`
+
+- Get data of clients named 'Sherrie':
+`curl -X GET http://localhost:8080/clients/byName/Sherrie -H 'token: "<AUTH_TOKEN>"'`
+
+Response: `{
+    "found": true,
+    "clients": [
+        {
+            "id": "011dd3d8-2d1e-4abe-9efc-006a1a4a0399",
+            "name": "Sherrie",
+            "email": "sherrieblankenship@quotezart.com",
+            "role": "user"
+        }
+    ]
+}`
 
 
 **main dependencies:**
